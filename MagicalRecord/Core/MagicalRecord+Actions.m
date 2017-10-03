@@ -22,7 +22,11 @@
 {
     NSManagedObjectContext *savingContext  = [NSManagedObjectContext MR_rootSavingContext];
     NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextWithParent:savingContext];
-
+    if (localContext == nil) {
+        // The Local Context Failed to be set revert to the saving context.
+        // Not sure why this might be nil but this may fix the issue.
+        localContext = savingContext;
+    }
     [localContext performBlock:^{
         [localContext MR_setWorkingName:NSStringFromSelector(_cmd)];
 
@@ -40,7 +44,11 @@
 {
     NSManagedObjectContext *savingContext  = [NSManagedObjectContext MR_rootSavingContext];
     NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextWithParent:savingContext];
-
+    if (localContext == nil) {
+        // The Local Context Failed to be set revert to the saving context.
+        // Not sure why this might be nil but this may fix the issue.
+        localContext = savingContext;
+    }
     [localContext performBlockAndWait:^{
         [localContext MR_setWorkingName:NSStringFromSelector(_cmd)];
 
