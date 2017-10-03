@@ -6,11 +6,9 @@
 //
 
 #import "NSManagedObjectContext+MagicalRecord.h"
-#import "NSManagedObjectContext+MagicalObserving.h"
 #import "NSManagedObjectContext+MagicalThreading.h"
 #import "NSPersistentStoreCoordinator+MagicalRecord.h"
 #import "MagicalRecord+ErrorHandling.h"
-#import "MagicalRecord+iCloud.h"
 #import "MagicalRecordLogging.h"
 
 static NSString * const MagicalRecordContextWorkingName = @"MagicalRecordContextWorkingName";
@@ -242,10 +240,7 @@ static id MagicalRecordUbiquitySetupNotificationObserver;
 {
     [self MR_setDefaultContext:nil];
     [self MR_setRootSavingContext:nil];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [self MR_clearNonMainThreadContextsCache];
-#pragma clang diagnostic pop
 }
 
 - (void) MR_obtainPermanentIDsBeforeSaving
@@ -270,11 +265,6 @@ static id MagicalRecordUbiquitySetupNotificationObserver;
         MagicalRecordUbiquitySetupNotificationObserver = nil;
     }
 
-    if ([MagicalRecord isICloudEnabled])
-    {
-        [MagicalRecordDefaultContext MR_stopObservingiCloudChangesInCoordinator:coordinator];
-    }
-
     MagicalRecordDefaultContext = moc;
     [MagicalRecordDefaultContext MR_setWorkingName:@"MagicalRecord Default Context"];
 
@@ -286,20 +276,6 @@ static id MagicalRecordUbiquitySetupNotificationObserver;
     }
 
     [moc MR_obtainPermanentIDsBeforeSaving];
-    if ([MagicalRecord isICloudEnabled])
-    {
-        [MagicalRecordDefaultContext MR_observeiCloudChangesInCoordinator:coordinator];
-    }
-    else
-    {
-        // If icloud is NOT enabled at the time of this method being called, listen for it to be setup later, and THEN set up observing cloud changes
-        MagicalRecordUbiquitySetupNotificationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kMagicalRecordPSCDidCompleteiCloudSetupNotification
-                                                                                            object:nil
-                                                                                             queue:[NSOperationQueue mainQueue]
-                                                                                        usingBlock:^(NSNotification *note) {
-                                                                                            [[NSManagedObjectContext MR_defaultContext] MR_observeiCloudChangesInCoordinator:coordinator];
-                                                                                        }];
-    }
     MRLogInfo(@"Set default context: %@", MagicalRecordDefaultContext);
 }
 
@@ -319,31 +295,6 @@ static id MagicalRecordUbiquitySetupNotificationObserver;
     }];
 
     MRLogInfo(@"Set root saving context: %@", MagicalRecordRootSavingContext);
-}
-
-@end
-
-#pragma mark - Deprecated Methods — DO NOT USE
-@implementation NSManagedObjectContext (MagicalRecordDeprecated)
-
-+ (NSManagedObjectContext *) MR_contextWithoutParent
-{
-    return [self MR_newPrivateQueueContext];
-}
-
-+ (NSManagedObjectContext *) MR_newContext
-{
-    return [self MR_context];
-}
-
-+ (NSManagedObjectContext *) MR_newContextWithParent:(NSManagedObjectContext *)parentContext
-{
-    return [self MR_contextWithParent:parentContext];
-}
-
-+ (NSManagedObjectContext *) MR_newContextWithStoreCoordinator:(NSPersistentStoreCoordinator *)coordinator
-{
-    return [self MR_contextWithStoreCoordinator:coordinator];
 }
 
 @end

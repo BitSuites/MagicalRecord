@@ -11,11 +11,6 @@
 
 @interface NSManagedObject (MagicalAggregation)
 
-+ (MR_nonnull NSNumber *) MR_numberOfEntities;
-+ (MR_nonnull NSNumber *) MR_numberOfEntitiesWithContext:(MR_nonnull NSManagedObjectContext *)context;
-+ (MR_nonnull NSNumber *) MR_numberOfEntitiesWithPredicate:(MR_nullable NSPredicate *)searchTerm;
-+ (MR_nonnull NSNumber *) MR_numberOfEntitiesWithPredicate:(MR_nullable NSPredicate *)searchTerm inContext:(MR_nonnull NSManagedObjectContext *)context;
-
 + (NSUInteger) MR_countOfEntities;
 + (NSUInteger) MR_countOfEntitiesWithContext:(MR_nonnull NSManagedObjectContext *)context;
 + (NSUInteger) MR_countOfEntitiesWithPredicate:(MR_nullable NSPredicate *)searchFilter;

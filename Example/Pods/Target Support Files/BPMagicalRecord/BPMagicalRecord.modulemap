@@ -1,0 +1,6 @@
+framework module BPMagicalRecord {
+  umbrella header "BPMagicalRecord-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -7,7 +7,6 @@
 
 #import <Foundation/Foundation.h>
 #import <BPMagicalRecord/MagicalRecordInternal.h>
-#import <BPMagicalRecord/MagicalRecordDeprecationMacros.h>
 #import <BPMagicalRecord/NSManagedObjectContext+MagicalSaves.h>
 #import <BPMagicalRecord/MagicalRecordXcode7CompatibilityMacros.h>
 
@@ -21,15 +20,5 @@
 /* For saving on the current thread as the caller, only with a separate context. Useful when you're managing your own threads/queues and need a serial call to create or change data
  */
 + (void) saveWithBlockAndWait:(void (^ __MR_nonnull)(NSManagedObjectContext * __MR_nonnull localContext))block;
-
-@end
-
-@interface MagicalRecord (ActionsDeprecated)
-
-+ (void) saveUsingCurrentThreadContextWithBlock:(void (^ __MR_nonnull)(NSManagedObjectContext * __MR_nonnull localContext))block completion:(MR_nullable MRSaveCompletionHandler)completion MR_DEPRECATED_WILL_BE_REMOVED_IN("3.0");
-+ (void) saveUsingCurrentThreadContextWithBlockAndWait:(void (^ __MR_nonnull)(NSManagedObjectContext * __MR_nonnull localContext))block MR_DEPRECATED_WILL_BE_REMOVED_IN("3.0");
-+ (void) saveInBackgroundWithBlock:(void (^ __MR_nonnull)(NSManagedObjectContext * __MR_nonnull localContext))block MR_DEPRECATED_WILL_BE_REMOVED_IN("3.0");
-+ (void) saveInBackgroundWithBlock:(void (^ __MR_nonnull)(NSManagedObjectContext * __MR_nonnull localContext))block completion:(void (^ __MR_nullable)(void))completion MR_DEPRECATED_WILL_BE_REMOVED_IN("3.0");
-+ (void) saveInBackgroundUsingCurrentContextWithBlock:(void (^ __MR_nonnull)(NSManagedObjectContext * __MR_nonnull localContext))block completion:(void (^ __MR_nullable)(void))completion errorHandler:(void (^ __MR_nullable)(NSError * __MR_nullable error))errorHandler MR_DEPRECATED_WILL_BE_REMOVED_IN("3.0");
 
 @end

@@ -84,8 +84,6 @@ NSInteger* MR_newColorComponentsFromString(NSString *serializedColor)
     return componentValues;
 }
 
-#if TARGET_OS_IPHONE
-
 UIColor * MR_colorFromString(NSString *serializedColor)
 {
     NSInteger *componentValues = MR_newColorComponentsFromString(serializedColor);
@@ -102,23 +100,3 @@ UIColor * MR_colorFromString(NSString *serializedColor)
     free(componentValues);
     return color;
 }
-
-#else
-
-NSColor * MR_colorFromString(NSString *serializedColor)
-{
-    NSInteger *componentValues = MR_newColorComponentsFromString(serializedColor);
-    if (componentValues == NULL)
-    {
-        return nil;
-    }
-  
-    NSColor *color = [NSColor colorWithDeviceRed:(componentValues[0] / 255.0f)
-                                           green:(componentValues[1] / 255.0f)
-                                            blue:(componentValues[2] / 255.0f)
-                                           alpha:componentValues[3]];
-    free(componentValues);
-    return color;
-}
-
-#endif

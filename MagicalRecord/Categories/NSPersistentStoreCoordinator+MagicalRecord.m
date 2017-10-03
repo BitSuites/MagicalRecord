@@ -13,7 +13,6 @@
 
 
 static NSPersistentStoreCoordinator *defaultCoordinator_ = nil;
-NSString * const kMagicalRecordPSCDidCompleteiCloudSetupNotification = @"kMagicalRecordPSCDidCompleteiCloudSetupNotification";
 NSString * const kMagicalRecordPSCMismatchWillDeleteStore = @"kMagicalRecordPSCMismatchWillDeleteStore";
 NSString * const kMagicalRecordPSCMismatchDidDeleteStore = @"kMagicalRecordPSCMismatchDidDeleteStore";
 NSString * const kMagicalRecordPSCMismatchWillRecreateStore = @"kMagicalRecordPSCMismatchWillRecreateStore";
@@ -24,12 +23,6 @@ NSString * const kMagicalRecordPSCMismatchCouldNotRecreateStore = @"kMagicalReco
 @interface NSDictionary (MagicalRecordMerging)
 
 - (NSMutableDictionary*) MR_dictionaryByMergingDictionary:(NSDictionary*)d; 
-
-@end 
-
-@interface MagicalRecord (iCloudPrivate)
-
-+ (void) setICloudEnabled:(BOOL)enabled;
 
 @end
 
@@ -140,77 +133,6 @@ NSString * const kMagicalRecordPSCMismatchCouldNotRecreateStore = @"kMagicalReco
     return store;
 }
 
-- (void) MR_addiCloudContainerID:(NSString *)containerID contentNameKey:(NSString *)contentNameKey storeIdentifier:(id)storeIdentifier cloudStorePathComponent:(NSString *)subPathComponent completion:(void(^)(void))completionBlock
-{
-    if (contentNameKey.length > 0)
-    {
-        NSAssert([contentNameKey rangeOfString:@"."].location == NSNotFound, @"NSPersistentStoreUbiquitousContentNameKey cannot contain a period.");
-    }
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        NSURL *cloudURL = [NSPersistentStore MR_cloudURLForUbiquitousContainer:containerID];
-        if (subPathComponent)
-        {
-            cloudURL = [cloudURL URLByAppendingPathComponent:subPathComponent];
-        }
-        
-        [MagicalRecord setICloudEnabled:cloudURL != nil];
-        
-        NSDictionary *options = [[self class] MR_autoMigrationOptions];
-        if (cloudURL)   //iCloud is available
-        {
-            NSMutableDictionary *iCloudOptions = [[NSMutableDictionary alloc] init];
-            [iCloudOptions setObject:cloudURL forKey:NSPersistentStoreUbiquitousContentURLKey];
-
-            if ([contentNameKey length] > 0)
-            {
-                [iCloudOptions setObject:contentNameKey forKey:NSPersistentStoreUbiquitousContentNameKey];
-            }
-
-            options = [options MR_dictionaryByMergingDictionary:iCloudOptions];
-        }
-        else
-        {
-            MRLogWarn(@"iCloud is not enabled");
-        }
-
-
-        if ([self respondsToSelector:@selector(performBlockAndWait:)])
-        {
-            [self performSelector:@selector(performBlockAndWait:) withObject:^{
-                [self MR_addSqliteStoreNamed:storeIdentifier withOptions:options];
-            }];
-        }
-        else
-        {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [self lock];
-#pragma clang diagnostic pop
-            [self MR_addSqliteStoreNamed:storeIdentifier withOptions:options];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [self unlock];
-#pragma clang diagnostic pop
-        }
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([NSPersistentStore MR_defaultPersistentStore] == nil)
-            {
-                [NSPersistentStore MR_setDefaultPersistentStore:[[self persistentStores] firstObject]];
-            }
-            if (completionBlock)
-            {
-                completionBlock();
-            }
-            NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-            [notificationCenter postNotificationName:kMagicalRecordPSCDidCompleteiCloudSetupNotification object:nil];
-        });
-    });
-}
-
-
 
 #pragma mark - Public Instance Methods
 
@@ -306,102 +228,6 @@ NSString * const kMagicalRecordPSCMismatchCouldNotRecreateStore = @"kMagicalReco
 	NSPersistentStoreCoordinator *coordinator = [self MR_coordinatorWithSqliteStoreNamed:[MagicalRecord defaultStoreName]];
 
     return coordinator;
-}
-
-- (void) MR_addiCloudContainerID:(NSString *)containerID contentNameKey:(NSString *)contentNameKey localStoreNamed:(NSString *)localStoreName cloudStorePathComponent:(NSString *)subPathComponent;
-{
-    [self MR_addiCloudContainerID:containerID 
-                   contentNameKey:contentNameKey 
-                  localStoreNamed:localStoreName
-          cloudStorePathComponent:subPathComponent
-                       completion:nil];
-}
-
-- (void) MR_addiCloudContainerID:(NSString *)containerID contentNameKey:(NSString *)contentNameKey localStoreAtURL:(NSURL *)storeURL cloudStorePathComponent:(NSString *)subPathComponent
-{
-    [self MR_addiCloudContainerID:containerID
-                   contentNameKey:contentNameKey
-                  localStoreAtURL:storeURL
-          cloudStorePathComponent:subPathComponent
-                       completion:nil];
-}
-
-- (void) MR_addiCloudContainerID:(NSString *)containerID contentNameKey:(NSString *)contentNameKey localStoreNamed:(NSString *)localStoreName cloudStorePathComponent:(NSString *)subPathComponent completion:(void(^)(void))completionBlock;
-{
-    [self MR_addiCloudContainerID:containerID
-                   contentNameKey:contentNameKey
-                  storeIdentifier:localStoreName
-          cloudStorePathComponent:subPathComponent
-                       completion:completionBlock]; 
-}
-
-- (void) MR_addiCloudContainerID:(NSString *)containerID contentNameKey:(NSString *)contentNameKey localStoreAtURL:(NSURL *)storeURL cloudStorePathComponent:(NSString *)subPathComponent completion:(void(^)(void))completionBlock;
-{
-    [self MR_addiCloudContainerID:containerID
-                   contentNameKey:contentNameKey
-                  storeIdentifier:storeURL
-          cloudStorePathComponent:subPathComponent
-                       completion:completionBlock];   
-}
-
-+ (NSPersistentStoreCoordinator *) MR_coordinatorWithiCloudContainerID:(NSString *)containerID 
-                                                        contentNameKey:(NSString *)contentNameKey
-                                                       localStoreNamed:(NSString *)localStoreName
-                                               cloudStorePathComponent:(NSString *)subPathComponent;
-{
-    return [self MR_coordinatorWithiCloudContainerID:containerID 
-                                      contentNameKey:contentNameKey
-                                     localStoreNamed:localStoreName
-                             cloudStorePathComponent:subPathComponent
-                                          completion:nil];
-}
-
-+ (NSPersistentStoreCoordinator *) MR_coordinatorWithiCloudContainerID:(NSString *)containerID
-                                                        contentNameKey:(NSString *)contentNameKey
-                                                       localStoreAtURL:(NSURL *)storeURL
-                                               cloudStorePathComponent:(NSString *)subPathComponent
-{
-    return [self MR_coordinatorWithiCloudContainerID:containerID
-                               contentNameKey:contentNameKey
-                              localStoreAtURL:storeURL
-                      cloudStorePathComponent:subPathComponent
-                                   completion:nil];
-}
-
-+ (NSPersistentStoreCoordinator *) MR_coordinatorWithiCloudContainerID:(NSString *)containerID 
-                                                        contentNameKey:(NSString *)contentNameKey
-                                                       localStoreNamed:(NSString *)localStoreName
-                                               cloudStorePathComponent:(NSString *)subPathComponent
-                                                            completion:(void(^)(void))completionHandler;
-{
-    NSManagedObjectModel *model = [NSManagedObjectModel MR_defaultManagedObjectModel];
-    NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
-    
-    [psc MR_addiCloudContainerID:containerID 
-                  contentNameKey:contentNameKey
-                 localStoreNamed:localStoreName
-         cloudStorePathComponent:subPathComponent
-                      completion:completionHandler];
-    
-    return psc;
-}
-
-+ (NSPersistentStoreCoordinator *) MR_coordinatorWithiCloudContainerID:(NSString *)containerID
-                                                        contentNameKey:(NSString *)contentNameKey
-                                                       localStoreAtURL:(NSURL *)storeURL
-                                               cloudStorePathComponent:(NSString *)subPathComponent
-                                                            completion:(void (^)(void))completionHandler
-{
-    NSManagedObjectModel *model = [NSManagedObjectModel MR_defaultManagedObjectModel];
-    NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
-    
-    [psc MR_addiCloudContainerID:containerID
-                  contentNameKey:contentNameKey
-                 localStoreAtURL:storeURL
-         cloudStorePathComponent:subPathComponent
-                      completion:completionHandler];
-    
-    return psc;
 }
 
 + (NSPersistentStoreCoordinator *) MR_coordinatorWithPersistentStore:(NSPersistentStore *)persistentStore;

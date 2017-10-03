@@ -1,0 +1,34 @@
+{
+  "name": "BPMagicalRecord",
+  "default_subspecs": "Core",
+  "version": "2.3.2",
+  "license": "MIT",
+  "summary": "Super Awesome Easy Fetching for Core Data 1!!!11!!!!1!.",
+  "homepage": "http://github.com/magicalpanda/MagicalRecord",
+  "authors": {
+    "Saul Mora": "saul@magicalpanda.com",
+    "Tony Arnold": "tony@thecocoabots.com"
+  },
+  "source": {
+    "git": "https://github.com/BitSuites/MagicalRecord.git"
+  },
+  "description": "Handy fetching, threading and data import helpers to make Core Data a little easier to use.",
+  "requires_arc": true,
+  "platforms": {
+    "ios": "9.0"
+  },
+  "subspecs": [
+    {
+      "name": "Core",
+      "frameworks": "CoreData",
+      "header_dir": "MagicalRecord",
+      "source_files": "MagicalRecord/**/*.{h,m}",
+      "exclude_files": "**/MagicalRecordShorthandMethodAliases.h",
+      "prefix_header_contents": "#import <CoreData/CoreData.h>\n#import <BPMagicalRecord/MagicalRecord.h>"
+    },
+    {
+      "name": "ShorthandMethodAliases",
+      "source_files": "**/MagicalRecordShorthandMethodAliases.h"
+    }
+  ]
+}

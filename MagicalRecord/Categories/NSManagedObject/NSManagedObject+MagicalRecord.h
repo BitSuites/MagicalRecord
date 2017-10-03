@@ -5,7 +5,6 @@
 //
 
 #import <CoreData/CoreData.h>
-#import <BPMagicalRecord/MagicalRecordDeprecationMacros.h>
 #import <BPMagicalRecord/MagicalRecordXcode7CompatibilityMacros.h>
 
 @interface NSManagedObject (MagicalRecord)
@@ -63,13 +62,5 @@
 + (MR_nonnull NSString *)entityName;
 - (MR_nullable instancetype) entityInManagedObjectContext:(MR_nonnull NSManagedObjectContext *)object;
 - (MR_nullable instancetype) insertInManagedObjectContext:(MR_nonnull NSManagedObjectContext *)object;
-
-@end
-
-#pragma mark - Deprecated Methods — DO NOT USE
-@interface NSManagedObject (MagicalRecordDeprecated)
-
-+ (MR_nullable instancetype) MR_createInContext:(MR_nonnull NSManagedObjectContext *)context MR_DEPRECATED_WILL_BE_REMOVED_IN_PLEASE_USE("4.0", "MR_createEntityInContext:");
-- (BOOL) MR_deleteInContext:(MR_nonnull NSManagedObjectContext *)context MR_DEPRECATED_WILL_BE_REMOVED_IN_PLEASE_USE("4.0", "MR_deleteEntityInContext:");
 
 @end

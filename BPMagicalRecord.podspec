@@ -1,3 +1,4 @@
+
 Pod::Spec.new do |s|
   s.default_subspec = 'Core'
   s.name     = 'BPMagicalRecord'
@@ -15,15 +16,10 @@ Pod::Spec.new do |s|
     sp.framework    = 'CoreData'
     sp.header_dir   = 'MagicalRecord'
     sp.source_files = 'MagicalRecord/**/*.{h,m}'
-    sp.exclude_files = '**/MagicalRecordShorthandMethodAliases.h'
     sp.prefix_header_contents = <<-EOS
     #import <CoreData/CoreData.h>
     #import <BPMagicalRecord/MagicalRecord.h>
     EOS
-  end
-
-  s.subspec 'ShorthandMethodAliases' do |sp|
-    sp.source_files = '**/MagicalRecordShorthandMethodAliases.h'
   end
 
 end

@@ -22,7 +22,6 @@ FOUNDATION_EXPORT const unsigned char MagicalRecordVersionString[];
 #import <BPMagicalRecord/MagicalRecord+ErrorHandling.h>
 #import <BPMagicalRecord/MagicalRecord+Options.h>
 #import <BPMagicalRecord/MagicalRecord+Setup.h>
-#import <BPMagicalRecord/MagicalRecord+iCloud.h>
 
 #import <BPMagicalRecord/NSManagedObject+MagicalRecord.h>
 #import <BPMagicalRecord/NSManagedObject+MagicalRequests.h>
@@ -30,7 +29,6 @@ FOUNDATION_EXPORT const unsigned char MagicalRecordVersionString[];
 #import <BPMagicalRecord/NSManagedObject+MagicalAggregation.h>
 #import <BPMagicalRecord/NSManagedObjectContext+MagicalRecord.h>
 #import <BPMagicalRecord/NSManagedObjectContext+MagicalChainSave.h>
-#import <BPMagicalRecord/NSManagedObjectContext+MagicalObserving.h>
 #import <BPMagicalRecord/NSManagedObjectContext+MagicalSaves.h>
 #import <BPMagicalRecord/NSManagedObjectContext+MagicalThreading.h>
 #import <BPMagicalRecord/NSPersistentStoreCoordinator+MagicalRecord.h>

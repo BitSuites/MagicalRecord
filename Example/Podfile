@@ -1,0 +1,11 @@
+platform :ios, '9.0'
+
+use_frameworks!
+
+def global_pods
+    pod 'BPMagicalRecord', :path => '../'
+end
+
+target 'Example' do
+    global_pods
+end
