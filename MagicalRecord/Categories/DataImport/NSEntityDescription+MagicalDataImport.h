@@ -7,7 +7,7 @@
 //
 
 #import <CoreData/CoreData.h>
-#import <MagicalRecord/MagicalRecordXcode7CompatibilityMacros.h>
+#import <BPMagicalRecord/MagicalRecordXcode7CompatibilityMacros.h>
 
 @interface NSEntityDescription (MagicalRecord_DataImport)
 

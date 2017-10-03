@@ -14,34 +14,34 @@ FOUNDATION_EXPORT double MagicalRecordVersionNumber;
 //! Project version string for MagicalRecord.
 FOUNDATION_EXPORT const unsigned char MagicalRecordVersionString[];
 
-#import <MagicalRecord/MagicalRecordXcode7CompatibilityMacros.h>
-#import <MagicalRecord/MagicalRecordInternal.h>
-#import <MagicalRecord/MagicalRecordLogging.h>
+#import <BPMagicalRecord/MagicalRecordXcode7CompatibilityMacros.h>
+#import <BPMagicalRecord/MagicalRecordInternal.h>
+#import <BPMagicalRecord/MagicalRecordLogging.h>
 
-#import <MagicalRecord/MagicalRecord+Actions.h>
-#import <MagicalRecord/MagicalRecord+ErrorHandling.h>
-#import <MagicalRecord/MagicalRecord+Options.h>
-#import <MagicalRecord/MagicalRecord+Setup.h>
-#import <MagicalRecord/MagicalRecord+iCloud.h>
+#import <BPMagicalRecord/MagicalRecord+Actions.h>
+#import <BPMagicalRecord/MagicalRecord+ErrorHandling.h>
+#import <BPMagicalRecord/MagicalRecord+Options.h>
+#import <BPMagicalRecord/MagicalRecord+Setup.h>
+#import <BPMagicalRecord/MagicalRecord+iCloud.h>
 
-#import <MagicalRecord/NSManagedObject+MagicalRecord.h>
-#import <MagicalRecord/NSManagedObject+MagicalRequests.h>
-#import <MagicalRecord/NSManagedObject+MagicalFinders.h>
-#import <MagicalRecord/NSManagedObject+MagicalAggregation.h>
-#import <MagicalRecord/NSManagedObjectContext+MagicalRecord.h>
-#import <MagicalRecord/NSManagedObjectContext+MagicalChainSave.h>
-#import <MagicalRecord/NSManagedObjectContext+MagicalObserving.h>
-#import <MagicalRecord/NSManagedObjectContext+MagicalSaves.h>
-#import <MagicalRecord/NSManagedObjectContext+MagicalThreading.h>
-#import <MagicalRecord/NSPersistentStoreCoordinator+MagicalRecord.h>
-#import <MagicalRecord/NSManagedObjectModel+MagicalRecord.h>
-#import <MagicalRecord/NSPersistentStore+MagicalRecord.h>
+#import <BPMagicalRecord/NSManagedObject+MagicalRecord.h>
+#import <BPMagicalRecord/NSManagedObject+MagicalRequests.h>
+#import <BPMagicalRecord/NSManagedObject+MagicalFinders.h>
+#import <BPMagicalRecord/NSManagedObject+MagicalAggregation.h>
+#import <BPMagicalRecord/NSManagedObjectContext+MagicalRecord.h>
+#import <BPMagicalRecord/NSManagedObjectContext+MagicalChainSave.h>
+#import <BPMagicalRecord/NSManagedObjectContext+MagicalObserving.h>
+#import <BPMagicalRecord/NSManagedObjectContext+MagicalSaves.h>
+#import <BPMagicalRecord/NSManagedObjectContext+MagicalThreading.h>
+#import <BPMagicalRecord/NSPersistentStoreCoordinator+MagicalRecord.h>
+#import <BPMagicalRecord/NSManagedObjectModel+MagicalRecord.h>
+#import <BPMagicalRecord/NSPersistentStore+MagicalRecord.h>
 
-#import <MagicalRecord/MagicalImportFunctions.h>
-#import <MagicalRecord/NSManagedObject+MagicalDataImport.h>
-#import <MagicalRecord/NSNumber+MagicalDataImport.h>
-#import <MagicalRecord/NSObject+MagicalDataImport.h>
-#import <MagicalRecord/NSString+MagicalDataImport.h>
-#import <MagicalRecord/NSAttributeDescription+MagicalDataImport.h>
-#import <MagicalRecord/NSRelationshipDescription+MagicalDataImport.h>
-#import <MagicalRecord/NSEntityDescription+MagicalDataImport.h>
+#import <BPMagicalRecord/MagicalImportFunctions.h>
+#import <BPMagicalRecord/NSManagedObject+MagicalDataImport.h>
+#import <BPMagicalRecord/NSNumber+MagicalDataImport.h>
+#import <BPMagicalRecord/NSObject+MagicalDataImport.h>
+#import <BPMagicalRecord/NSString+MagicalDataImport.h>
+#import <BPMagicalRecord/NSAttributeDescription+MagicalDataImport.h>
+#import <BPMagicalRecord/NSRelationshipDescription+MagicalDataImport.h>
+#import <BPMagicalRecord/NSEntityDescription+MagicalDataImport.h>

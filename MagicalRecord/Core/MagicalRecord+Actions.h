@@ -6,10 +6,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <MagicalRecord/MagicalRecordInternal.h>
-#import <MagicalRecord/MagicalRecordDeprecationMacros.h>
-#import <MagicalRecord/NSManagedObjectContext+MagicalSaves.h>
-#import <MagicalRecord/MagicalRecordXcode7CompatibilityMacros.h>
+#import <BPMagicalRecord/MagicalRecordInternal.h>
+#import <BPMagicalRecord/MagicalRecordDeprecationMacros.h>
+#import <BPMagicalRecord/NSManagedObjectContext+MagicalSaves.h>
+#import <BPMagicalRecord/MagicalRecordXcode7CompatibilityMacros.h>
 
 @interface MagicalRecord (Actions)
 
