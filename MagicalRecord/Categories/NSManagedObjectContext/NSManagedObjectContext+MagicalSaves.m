@@ -36,47 +36,39 @@
 - (void) MR_saveWithOptions:(MRSaveOptions)saveOptions completion:(MRSaveCompletionHandler)completion;
 {
     __block BOOL hasChanges = NO;
-
-    if ([self concurrencyType] == NSConfinementConcurrencyType)
-    {
+    [self performBlockAndWait:^{
         hasChanges = [self hasChanges];
-    }
-    else
-    {
-        [self performBlockAndWait:^{
-            hasChanges = [self hasChanges];
-        }];
-    }
-
+    }];
+    
     if (!hasChanges)
     {
         MRLogVerbose(@"NO CHANGES IN ** %@ ** CONTEXT - NOT SAVING", [self MR_workingName]);
-
+        
         if (completion)
         {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(NO, nil);
             });
         }
-
+        
         return;
     }
-
+    
     BOOL shouldSaveParentContexts = ((saveOptions & MRSaveParentContexts) == MRSaveParentContexts);
     BOOL shouldSaveSynchronously = ((saveOptions & MRSaveSynchronously) == MRSaveSynchronously);
     BOOL shouldSaveSynchronouslyExceptRoot = ((saveOptions & MRSaveSynchronouslyExceptRootContext) == MRSaveSynchronouslyExceptRootContext);
-
+    
     BOOL saveSynchronously = (shouldSaveSynchronously && !shouldSaveSynchronouslyExceptRoot) ||
-                             (shouldSaveSynchronouslyExceptRoot && (self != [[self class] MR_rootSavingContext]));
-
+    (shouldSaveSynchronouslyExceptRoot && (self != [[self class] MR_rootSavingContext]));
+    
     id saveBlock = ^{
         MRLogInfo(@"→ Saving %@", [self MR_description]);
         MRLogVerbose(@"→ Save Parents? %@", shouldSaveParentContexts ? @"YES" : @"NO");
         MRLogVerbose(@"→ Save Synchronously? %@", saveSynchronously ? @"YES" : @"NO");
-
+        
         BOOL saveResult = NO;
         NSError *error = nil;
-
+        
         @try
         {
             saveResult = [self save:&error];
@@ -88,12 +80,12 @@
         @finally
         {
             [MagicalRecord handleErrors:error];
-
+            
             if (saveResult && shouldSaveParentContexts && [self parentContext])
             {
                 // Add/remove the synchronous save option from the mask if necessary
                 MRSaveOptions modifiedOptions = saveOptions;
-
+                
                 if (saveSynchronously)
                 {
                     modifiedOptions |= MRSaveSynchronously;
@@ -102,7 +94,7 @@
                 {
                     modifiedOptions &= ~MRSaveSynchronously;
                 }
-
+                
                 // If we're saving parent contexts, do so
                 [[self parentContext] MR_saveWithOptions:modifiedOptions completion:completion];
             }
@@ -112,7 +104,7 @@
                 {
                     MRLogVerbose(@"→ Finished saving: %@", [self MR_description]);
                 }
-
+                
                 if (completion)
                 {
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -122,7 +114,7 @@
             }
         }
     };
-
+    
     if (saveSynchronously)
     {
         [self performBlockAndWait:saveBlock];
@@ -134,3 +126,4 @@
 }
 
 @end
+
